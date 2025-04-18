@@ -1,21 +1,22 @@
 // ring.cc
-//	Routines to implement a ring buffer for producer and consumer 
+//	Routines to implement a ring buffer for producer and consumer
 //      problem.
-//	
+//
 // Copyright (c) 1995 The Regents of the University of Southern Queensland.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
-extern "C" {
+extern "C"
+{
 #include <stdio.h>
-extern int exit(int st);
+    extern int exit(int st);
 }
 
 #include "ring.h"
 
 //----------------------------------------------------------------------
 // slot::slot
-// 	The constructor for the slot class.  
+// 	The constructor for the slot class.
 //----------------------------------------------------------------------
 
 slot::slot(int id, int number)
@@ -23,8 +24,6 @@ slot::slot(int id, int number)
     thread_id = id;
     value = number;
 }
-
-
 
 //----------------------------------------------------------------------
 // Ring::Ring
@@ -36,16 +35,17 @@ slot::slot(int id, int number)
 
 Ring::Ring(int sz)
 {
-    if (sz < 1) {
-	fprintf(stderr, "Error: Ring: size %d too small\n", sz);
-	exit(1);
+    if (sz < 1)
+    {
+        fprintf(stderr, "Error: Ring: size %d too small\n", sz);
+        exit(1);
     }
 
     // Initialize the data members of the ring object.
     size = sz;
     in = 0;
     out = 0;
-    buffer = new slot[size]; //allocate an array of slots.
+    buffer = new slot[size]; // allocate an array of slots.
 }
 
 //----------------------------------------------------------------------
@@ -60,7 +60,7 @@ Ring::~Ring()
     //     delete [size] stack;
     // but apparently G++ doesn't like that.
 
-    delete [] buffer;
+    delete[] buffer;
 }
 
 //----------------------------------------------------------------------
@@ -71,8 +71,7 @@ Ring::~Ring()
 //	"message" -- the message to be put in the buffer
 //----------------------------------------------------------------------
 
-void
-Ring::Put(slot *message)
+void Ring::Put(slot *message)
 {
     buffer[in].thread_id = message->thread_id;
     buffer[in].value = message->value;
@@ -87,24 +86,19 @@ Ring::Put(slot *message)
 //	"message" -- the message from  the buffer
 //----------------------------------------------------------------------
 
-void
-Ring::Get(slot *message)
+void Ring::Get(slot *message)
 {
     message->thread_id = buffer[out].thread_id;
     message->value = buffer[out].value;
     out = (out + 1) % size;
 }
 
-int
-Ring::Empty()
+int Ring::Empty()
 {
-// to be implemented
+    // to be implemented
 }
 
-int
-Ring::Full()
+int Ring::Full()
 {
-// to be implemented
+    // to be implemented
 }
-
-
