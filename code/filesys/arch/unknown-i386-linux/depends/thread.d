@@ -4,5 +4,5 @@ arch/unknown-i386-linux/depends/thread.d arch/unknown-i386-linux/objects/thread.
  ../threads/list.h ../threads/system.h ../threads/scheduler.h \
  ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
  ../machine/timer.h ../threads/utility.h ../filesys/filesys.h \
- ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
- ../threads/synch.h
+ ../filesys/openfile.h ../userprog/bitmap.h ../filesys/openfile.h \
+ ../filesys/synchdisk.h ../machine/disk.h ../threads/synch.h

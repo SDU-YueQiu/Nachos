@@ -1,5 +1,5 @@
-// synchdisk.cc 
-//	Routines to synchronously access the disk.  The physical disk 
+// synchdisk.cc
+//	Routines to synchronously access the disk.  The physical disk
 //	is an asynchronous device (disk requests return immediately, and
 //	an interrupt happens later on).  This is a layer on top of
 //	the disk providing a synchronous interface (requests wait until
@@ -11,7 +11,7 @@
 //	exclusion.
 //
 // Copyright (c) 1992-1993 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
@@ -19,16 +19,16 @@
 
 //----------------------------------------------------------------------
 // DiskRequestDone
-// 	Disk interrupt handler.  Need this to be a C routine, because 
+// 	Disk interrupt handler.  Need this to be a C routine, because
 //	C++ can't handle pointers to member functions.
 //----------------------------------------------------------------------
 
 static void
-DiskRequestDone (_int arg)
+DiskRequestDone(_int arg)
 {
-    SynchDisk* dsk = (SynchDisk *)arg;	// disk -> dsk
+    SynchDisk *dsk = (SynchDisk *)arg; // disk -> dsk
 
-    dsk->RequestDone();					// disk -> dsk
+    dsk->RequestDone(); // disk -> dsk
 }
 
 //----------------------------------------------------------------------
@@ -40,11 +40,11 @@ DiskRequestDone (_int arg)
 //	   (usually, "DISK")
 //----------------------------------------------------------------------
 
-SynchDisk::SynchDisk(char* name)
+SynchDisk::SynchDisk(char *name)
 {
     semaphore = new Semaphore("synch disk", 0);
     lock = new Lock("synch disk lock");
-    disk = new Disk(name, DiskRequestDone, (_int) this);
+    disk = new Disk(name, DiskRequestDone, (_int)this);
 }
 
 //----------------------------------------------------------------------
@@ -69,12 +69,11 @@ SynchDisk::~SynchDisk()
 //	"data" -- the buffer to hold the contents of the disk sector
 //----------------------------------------------------------------------
 
-void
-SynchDisk::ReadSector(int sectorNumber, char* data)
+void SynchDisk::ReadSector(int sectorNumber, char *data)
 {
-    lock->Acquire();			// only one disk I/O at a time
+    lock->Acquire(); // only one disk I/O at a time
     disk->ReadRequest(sectorNumber, data);
-    semaphore->P();			// wait for interrupt
+    semaphore->P(); // wait for interrupt
     lock->Release();
 }
 
@@ -87,12 +86,14 @@ SynchDisk::ReadSector(int sectorNumber, char* data)
 //	"data" -- the new contents of the disk sector
 //----------------------------------------------------------------------
 
-void
-SynchDisk::WriteSector(int sectorNumber, char* data)
+void SynchDisk::WriteSector(int sectorNumber, char *data)
 {
-    lock->Acquire();			// only one disk I/O at a time
+    // TODO:debug写入0扇区
+    if (sectorNumber == 0)
+        printf("ffffffffffffuck it up");
+    lock->Acquire(); // only one disk I/O at a time
     disk->WriteRequest(sectorNumber, data);
-    semaphore->P();			// wait for interrupt
+    semaphore->P(); // wait for interrupt
     lock->Release();
 }
 
@@ -102,8 +103,7 @@ SynchDisk::WriteSector(int sectorNumber, char* data)
 //	request to finish.
 //----------------------------------------------------------------------
 
-void
-SynchDisk::RequestDone()
-{ 
+void SynchDisk::RequestDone()
+{
     semaphore->V();
 }
