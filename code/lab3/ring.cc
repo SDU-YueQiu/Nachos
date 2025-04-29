@@ -6,10 +6,9 @@
 // All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
-extern "C"
-{
+extern "C" {
 #include <stdio.h>
-    extern int exit(int st);
+extern int exit(int st);
 }
 
 #include "ring.h"
@@ -45,7 +44,7 @@ Ring::Ring(int sz)
     size = sz;
     in = 0;
     out = 0;
-    buffer = new slot[size]; // allocate an array of slots.
+    buffer = new slot[size];// allocate an array of slots.
 }
 
 //----------------------------------------------------------------------

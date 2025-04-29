@@ -6,14 +6,14 @@
 // All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
-#include "copyright.h"
 #include "utility.h"
+#include "copyright.h"
 
 // this seems to be dependent on how the compiler is configured.
 // if you have problems with va_start, try both of these alternatives
 #include <stdarg.h>
 
-static char *enableFlags = NULL; // controls which DEBUG messages are printed
+static char *enableFlags = NULL;// controls which DEBUG messages are printed
 
 //----------------------------------------------------------------------
 // DebugInit
@@ -39,7 +39,7 @@ void DebugInit(char *flagList)
 bool DebugIsEnabled(char flag)
 {
     if (enableFlags != NULL)
-        return (bool)((strchr(enableFlags, flag) != 0) || (strchr(enableFlags, '+') != 0));
+        return (bool) ((strchr(enableFlags, flag) != 0) || (strchr(enableFlags, '+') != 0));
     else
         return FALSE;
 }

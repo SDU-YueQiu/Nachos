@@ -1,9 +1,9 @@
 // ring.cc
-//	Routines to implement a ring buffer for producer and consumer 
+//	Routines to implement a ring buffer for producer and consumer
 //      problem.
-//	
+//
 // Copyright (c) 1995 The Regents of the University of Southern Queensland.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 extern "C" {
@@ -16,7 +16,7 @@ extern int exit(int st);
 
 //----------------------------------------------------------------------
 // slot::slot
-// 	The constructor for the slot class.  
+// 	The constructor for the slot class.
 //----------------------------------------------------------------------
 
 slot::slot(int id, int number)
@@ -24,7 +24,6 @@ slot::slot(int id, int number)
     thread_id = id;
     value = number;
 }
-
 
 
 //----------------------------------------------------------------------
@@ -38,8 +37,8 @@ slot::slot(int id, int number)
 Ring::Ring(int sz)
 {
     if (sz < 1) {
-	fprintf(stderr, "Error: Ring: size %d too small\n", sz);
-	exit(1);
+        fprintf(stderr, "Error: Ring: size %d too small\n", sz);
+        exit(1);
     }
 
     // Initialize the data members of the ring object.
@@ -47,7 +46,7 @@ Ring::Ring(int sz)
     in = 0;
     out = 0;
     current = 0;
-    buffer = new slot[size]; //allocate an array of slots.
+    buffer = new slot[size];//allocate an array of slots.
 
     // Initialize condition variables
     notfull = new Condition_H("notfull");
@@ -71,7 +70,7 @@ Ring::~Ring()
     //     delete [size] stack;
     // but apparently G++ doesn't like that.
 
-    delete [] buffer;
+    delete[] buffer;
 
     delete notfull;
     delete notempty;
@@ -88,17 +87,15 @@ Ring::~Ring()
 //	"message" -- the message to be put in the buffer
 //----------------------------------------------------------------------
 
-void
-Ring::Put(slot *message)
+void Ring::Put(slot *message)
 {
 
     mutex->P();
-    
-    if (current == size) 
+
+    if (current == size)
     {
 
         notfull->Wait(mutex, next, &next_count);
-
     }
 
     buffer[in].thread_id = message->thread_id;
@@ -107,11 +104,11 @@ Ring::Put(slot *message)
     in = (in + 1) % size;
 
     notempty->Signal(next, &next_count);
-    
-    if (next_count > 0) 
-	  next->V();
-    else 
-	  mutex->V();
+
+    if (next_count > 0)
+        next->V();
+    else
+        mutex->V();
 }
 
 //----------------------------------------------------------------------
@@ -122,19 +119,17 @@ Ring::Put(slot *message)
 //	"message" -- the message from  the buffer
 //----------------------------------------------------------------------
 
-void
-Ring::Get(slot *message)
+void Ring::Get(slot *message)
 {
 
     mutex->P();
-	
-    if (current == 0) 
-    {
-	
-	notempty->Wait(mutex, next, &next_count);
 
+    if (current == 0)
+    {
+
+        notempty->Wait(mutex, next, &next_count);
     }
-    
+
     message->thread_id = buffer[out].thread_id;
     message->value = buffer[out].value;
     current--;
@@ -142,22 +137,18 @@ Ring::Get(slot *message)
 
     notfull->Signal(next, &next_count);
 
-    if (next_count > 0) 
-	next->V();
-    else 
-	mutex->V();
+    if (next_count > 0)
+        next->V();
+    else
+        mutex->V();
 }
 
-int
-Ring::Empty()
+int Ring::Empty()
 {
-// to be implemented
+    // to be implemented
 }
 
-int
-Ring::Full()
+int Ring::Full()
 {
-// to be implemented
+    // to be implemented
 }
-
-

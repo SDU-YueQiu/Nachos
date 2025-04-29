@@ -30,18 +30,18 @@ public:
 class Ring
 {
 public:
-    Ring(int sz); // Constructor:  initialize variables, allocate space.
-    ~Ring();      // Destructor:   deallocate space allocated above.
+    Ring(int sz);// Constructor:  initialize variables, allocate space.
+    ~Ring();     // Destructor:   deallocate space allocated above.
 
-    void Put(slot *message); // Put a message the next empty slot.
+    void Put(slot *message);// Put a message the next empty slot.
 
-    void Get(slot *message); // Get a message from the next  full slot.
+    void Get(slot *message);// Get a message from the next  full slot.
 
-    int Full();  // Returns non-0 if the ring is full, 0 otherwise.
-    int Empty(); // Returns non-0 if the ring is empty, 0 otherwise.
+    int Full(); // Returns non-0 if the ring is full, 0 otherwise.
+    int Empty();// Returns non-0 if the ring is empty, 0 otherwise.
 
 private:
-    int size;     // The size of the ring buffer.
-    int in, out;  // Index of
-    slot *buffer; // A pointer to an array for the ring buffer.
+    int size;    // The size of the ring buffer.
+    int in, out; // Index of
+    slot *buffer;// A pointer to an array for the ring buffer.
 };

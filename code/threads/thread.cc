@@ -14,15 +14,15 @@
 // All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
-#include "copyright.h"
 #include "thread.h"
+#include "copyright.h"
 #include "switch.h"
 #include "synch.h"
 #include "system.h"
 
-#define STACK_FENCEPOST 0xdeadbeef // this is put at the top of the
-                                   // execution stack, for detecting
-                                   // stack overflows
+#define STACK_FENCEPOST 0xdeadbeef// this is put at the top of the  \
+                                  // execution stack, for detecting \
+                                  // stack overflows
 
 //----------------------------------------------------------------------
 // Thread::Thread
@@ -61,7 +61,7 @@ Thread::~Thread()
 
     ASSERT(this != currentThread);
     if (stack != NULL)
-        DeallocBoundedArray((char *)stack, StackSize * sizeof(_int));
+        DeallocBoundedArray((char *) stack, StackSize * sizeof(_int));
 }
 
 //----------------------------------------------------------------------
@@ -88,18 +88,18 @@ void Thread::Fork(VoidFunctionPtr func, _int arg)
 {
 #ifdef HOST_ALPHA
     DEBUG('t', "Forking thread \"%s\" with func = 0x%lx, arg = %ld\n",
-          name, (long)func, arg);
+          name, (long) func, arg);
 #else
     DEBUG('t', "Forking thread \"%s\" with func = 0x%x, arg = %d\n",
-          name, (int)func, arg);
+          name, (int) func, arg);
 #endif
 
     StackAllocate(func, arg);
 
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
-    scheduler->ReadyToRun(this); // ReadyToRun assumes that interrupts
-                                 // are disabled!
-    (void)interrupt->SetLevel(oldLevel);
+    scheduler->ReadyToRun(this);// ReadyToRun assumes that interrupts
+                                // are disabled!
+    (void) interrupt->SetLevel(oldLevel);
 }
 
 //----------------------------------------------------------------------
@@ -120,10 +120,10 @@ void Thread::Fork(VoidFunctionPtr func, _int arg)
 void Thread::CheckOverflow()
 {
     if (stack != NULL)
-#ifdef HOST_SNAKE // Stacks grow upward on the Snakes
-        ASSERT((unsigned int)stack[StackSize - 1] == STACK_FENCEPOST);
+#ifdef HOST_SNAKE// Stacks grow upward on the Snakes
+        ASSERT((unsigned int) stack[StackSize - 1] == STACK_FENCEPOST);
 #else
-        ASSERT((unsigned int)*stack == STACK_FENCEPOST);
+        ASSERT((unsigned int) *stack == STACK_FENCEPOST);
 #endif
 }
 
@@ -145,13 +145,13 @@ void Thread::CheckOverflow()
 //
 void Thread::Finish()
 {
-    (void)interrupt->SetLevel(IntOff);
+    (void) interrupt->SetLevel(IntOff);
     ASSERT(this == currentThread);
 
     DEBUG('t', "Finishing thread \"%s\"\n", getName());
 
     threadToBeDestroyed = currentThread;
-    Sleep(); // invokes SWITCH
+    Sleep();// invokes SWITCH
     // not reached
 }
 
@@ -188,7 +188,7 @@ void Thread::Yield()
         scheduler->ReadyToRun(this);
         scheduler->Run(nextThread);
     }
-    (void)interrupt->SetLevel(oldLevel);
+    (void) interrupt->SetLevel(oldLevel);
 }
 
 //----------------------------------------------------------------------
@@ -221,9 +221,9 @@ void Thread::Sleep()
 
     status = BLOCKED;
     while ((nextThread = scheduler->FindNextToRun()) == NULL)
-        interrupt->Idle(); // no one to run, wait for an interrupt
+        interrupt->Idle();// no one to run, wait for an interrupt
 
-    scheduler->Run(nextThread); // returns when we've been signalled
+    scheduler->Run(nextThread);// returns when we've been signalled
 }
 
 //----------------------------------------------------------------------
@@ -238,7 +238,7 @@ static void ThreadFinish() { currentThread->Finish(); }
 static void InterruptEnable() { interrupt->Enable(); }
 void ThreadPrint(_int arg)
 {
-    Thread *t = (Thread *)arg;
+    Thread *t = (Thread *) arg;
     t->Print();
 }
 
@@ -256,24 +256,24 @@ void ThreadPrint(_int arg)
 
 void Thread::StackAllocate(VoidFunctionPtr func, _int arg)
 {
-    stack = (int *)AllocBoundedArray(StackSize * sizeof(_int));
+    stack = (int *) AllocBoundedArray(StackSize * sizeof(_int));
 
 #ifdef HOST_SNAKE
     // HP stack works from low addresses to high addresses
-    stackTop = stack + 16; // HP requires 64-byte frame marker
+    stackTop = stack + 16;// HP requires 64-byte frame marker
     stack[StackSize - 1] = STACK_FENCEPOST;
 #else
     // i386 & MIPS & SPARC & ALPHA stack works from high addresses to low addresses
 #ifdef HOST_SPARC
     // SPARC stack must contains at least 1 activation record to start with.
     stackTop = stack + StackSize - 96;
-#else // HOST_MIPS  || HOST_i386 || HOST_ALPHA
-    stackTop = stack + StackSize - 4; // -4 to be on the safe side!
+#else// HOST_MIPS  || HOST_i386 || HOST_ALPHA
+    stackTop = stack + StackSize - 4;// -4 to be on the safe side!
 #ifdef HOST_i386
-    // the 80386 passes the return address on the stack.  In order for
-    // SWITCH() to go to ThreadRoot when we switch to this thread, the
-    // return addres used in SWITCH() must be the starting address of
-    // ThreadRoot.
+                                     // the 80386 passes the return address on the stack.  In order for
+                                     // SWITCH() to go to ThreadRoot when we switch to this thread, the
+                                     // return addres used in SWITCH() must be the starting address of
+                                     // ThreadRoot.
 
     //    *(--stackTop) = (int)ThreadRoot;
     // This statement can be commented out after a bug in SWITCH function
@@ -346,15 +346,15 @@ void Thread::StackAllocate(VoidFunctionPtr func, _int arg)
     // Sep 1, 2003
 
 #endif
-#endif // HOST_SPARC
+#endif// HOST_SPARC
     *stack = STACK_FENCEPOST;
-#endif // HOST_SNAKE
+#endif// HOST_SNAKE
 
-    machineState[PCState] = (_int)ThreadRoot;
-    machineState[StartupPCState] = (_int)InterruptEnable;
-    machineState[InitialPCState] = (_int)func;
+    machineState[PCState] = (_int) ThreadRoot;
+    machineState[StartupPCState] = (_int) InterruptEnable;
+    machineState[InitialPCState] = (_int) func;
     machineState[InitialArgState] = arg;
-    machineState[WhenDonePCState] = (_int)ThreadFinish;
+    machineState[WhenDonePCState] = (_int) ThreadFinish;
 }
 
 #ifdef USER_PROGRAM

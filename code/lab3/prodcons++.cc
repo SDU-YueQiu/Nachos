@@ -11,39 +11,38 @@
 // All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
-#include <stdio.h>
 #include "copyright.h"
 #include "system.h"
+#include <stdio.h>
 
 // 系统调用
-#include <unistd.h>
 #include <fcntl.h>
-extern "C"
-{
+#include <unistd.h>
+extern "C" {
 #include <stdio.h>
-    extern int exit(int st);
+extern int exit(int st);
 }
 
-#include "synch.h"
 #include "ring.h"
+#include "synch.h"
 
-#define BUFF_SIZE 3 // the size of the round buffer
-#define N_PROD 2    // the number of producers
-#define N_CONS 2    // the number of consumers
-#define N_MESSG 4   // the number of messages produced by each producer
-#define MAX_NAME 16 // the maximum lengh of a name
+#define BUFF_SIZE 3// the size of the round buffer
+#define N_PROD 2   // the number of producers
+#define N_CONS 2   // the number of consumers
+#define N_MESSG 4  // the number of messages produced by each producer
+#define MAX_NAME 16// the maximum lengh of a name
 
 #define MAXLEN 48
 #define LINELEN 24
 
-Thread *producers[N_PROD]; // array of pointers to the producer
-Thread *consumers[N_CONS]; // and consumer threads;
+Thread *producers[N_PROD];// array of pointers to the producer
+Thread *consumers[N_CONS];// and consumer threads;
 
-char prod_names[N_PROD][MAX_NAME]; // array of charater string for prod names
-char cons_names[N_CONS][MAX_NAME]; // array of charater string for cons names
+char prod_names[N_PROD][MAX_NAME];// array of charater string for prod names
+char cons_names[N_CONS][MAX_NAME];// array of charater string for cons names
 
-Semaphore *nempty, *nfull; // two semaphores for empty and full slots
-Semaphore *mutex;          // semaphore for the mutual exclusion
+Semaphore *nempty, *nfull;// two semaphores for empty and full slots
+Semaphore *mutex;         // semaphore for the mutual exclusion
 
 Ring *ring;
 

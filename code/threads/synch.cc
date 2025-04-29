@@ -21,8 +21,8 @@
 // All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
-#include "copyright.h"
 #include "synch.h"
+#include "copyright.h"
 #include "system.h"
 
 //----------------------------------------------------------------------
@@ -63,17 +63,17 @@ Semaphore::~Semaphore()
 
 void Semaphore::P()
 {
-    IntStatus oldLevel = interrupt->SetLevel(IntOff); // disable interrupts
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);// disable interrupts
 
     while (value == 0)
     {                                         // semaphore not available
-        queue->Append((void *)currentThread); // so go to sleep
+        queue->Append((void *) currentThread);// so go to sleep
         currentThread->Sleep();
     }
-    value--; // semaphore available,
-             // consume its value
+    value--;// semaphore available,
+            // consume its value
 
-    (void)interrupt->SetLevel(oldLevel); // re-enable interrupts
+    (void) interrupt->SetLevel(oldLevel);// re-enable interrupts
 }
 
 //----------------------------------------------------------------------
@@ -89,11 +89,11 @@ void Semaphore::V()
     Thread *thread;
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
-    thread = (Thread *)queue->Remove();
-    if (thread != NULL) // make thread ready, consuming the V immediately
+    thread = (Thread *) queue->Remove();
+    if (thread != NULL)// make thread ready, consuming the V immediately
         scheduler->ReadyToRun(thread);
     value++;
-    (void)interrupt->SetLevel(oldLevel);
+    (void) interrupt->SetLevel(oldLevel);
 }
 
 //----------------------------------------------------------------------
@@ -128,11 +128,11 @@ Lock::~Lock()
 //----------------------------------------------------------------------
 void Lock::Acquire()
 {
-    IntStatus oldLevel = interrupt->SetLevel(IntOff); // disable interrupts
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);// disable interrupts
 
     lock->P();                           // procure the semaphore
     owner = currentThread;               // record the new owner of the lock
-    (void)interrupt->SetLevel(oldLevel); // re-enable interrupts
+    (void) interrupt->SetLevel(oldLevel);// re-enable interrupts
 }
 
 //----------------------------------------------------------------------
@@ -142,13 +142,13 @@ void Lock::Acquire()
 //----------------------------------------------------------------------
 void Lock::Release()
 {
-    IntStatus oldLevel = interrupt->SetLevel(IntOff); // disable interrupts
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);// disable interrupts
 
     // Ensure: a) lock is BUSY  b) this thread is the same one that acquired it.
     ASSERT(currentThread == owner);
-    owner = NULL; // clear the owner
-    lock->V();    // vanquish the semaphore
-    (void)interrupt->SetLevel(oldLevel);
+    owner = NULL;// clear the owner
+    lock->V();   // vanquish the semaphore
+    (void) interrupt->SetLevel(oldLevel);
 }
 
 //----------------------------------------------------------------------
@@ -160,7 +160,7 @@ bool Lock::isHeldByCurrentThread()
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
     result = currentThread == owner;
-    (void)interrupt->SetLevel(oldLevel);
+    (void) interrupt->SetLevel(oldLevel);
     return (result);
 }
 
@@ -202,17 +202,17 @@ void Condition::Wait(Lock *conditionLock)
 {
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
-    ASSERT(conditionLock->isHeldByCurrentThread()); // check pre-condition
+    ASSERT(conditionLock->isHeldByCurrentThread());// check pre-condition
     if (queue->IsEmpty())
     {
-        lock = conditionLock; // helps to enforce pre-condition
+        lock = conditionLock;// helps to enforce pre-condition
     }
-    ASSERT(lock == conditionLock); // another pre-condition
-    queue->Append(currentThread);  // add this thread to the waiting list
-    conditionLock->Release();      // release the lock
-    currentThread->Sleep();        // goto sleep
-    conditionLock->Acquire();      // awaken: re-acquire the lock
-    (void)interrupt->SetLevel(oldLevel);
+    ASSERT(lock == conditionLock);// another pre-condition
+    queue->Append(currentThread); // add this thread to the waiting list
+    conditionLock->Release();     // release the lock
+    currentThread->Sleep();       // goto sleep
+    conditionLock->Acquire();     // awaken: re-acquire the lock
+    (void) interrupt->SetLevel(oldLevel);
 }
 
 //----------------------------------------------------------------------
@@ -231,10 +231,10 @@ void Condition::Signal(Lock *conditionLock)
     if (!queue->IsEmpty())
     {
         ASSERT(lock == conditionLock);
-        nextThread = (Thread *)queue->Remove();
-        scheduler->ReadyToRun(nextThread); // wake up the thread
+        nextThread = (Thread *) queue->Remove();
+        scheduler->ReadyToRun(nextThread);// wake up the thread
     }
-    (void)interrupt->SetLevel(oldLevel);
+    (void) interrupt->SetLevel(oldLevel);
 }
 
 //----------------------------------------------------------------------
@@ -253,10 +253,10 @@ void Condition::Broadcast(Lock *conditionLock)
     if (!queue->IsEmpty())
     {
         ASSERT(lock == conditionLock);
-        while (nextThread = (Thread *)queue->Remove())
+        while (nextThread = (Thread *) queue->Remove())
         {
-            scheduler->ReadyToRun(nextThread); // wake up the thread
+            scheduler->ReadyToRun(nextThread);// wake up the thread
         }
     }
-    (void)interrupt->SetLevel(oldLevel);
+    (void) interrupt->SetLevel(oldLevel);
 }

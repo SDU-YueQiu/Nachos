@@ -14,16 +14,16 @@
 
 #include "copyright.h"
 
-#include "utility.h"
+#include "disk.h"
 #include "filesys.h"
+#include "stats.h"
 #include "system.h"
 #include "thread.h"
-#include "disk.h"
-#include "stats.h"
+#include "utility.h"
 
 #include "directory.h"
 
-#define TransferSize 10 // make it small, just to be difficult
+#define TransferSize 10// make it small, just to be difficult
 
 //----------------------------------------------------------------------
 // Copy
@@ -53,7 +53,7 @@ void Copy(char *from, char *to)
     // Create a Nachos file of the same length
     DEBUG('f', "Copying file %s, size %d, to file %s\n", from, fileLength, to);
     if (!fileSystem->Create(to, fileLength))
-    { // Create Nachos file
+    {// Create Nachos file
         printf("Copy: couldn't create output file %s\n", to);
         fclose(fp);
         return;
@@ -263,7 +263,7 @@ void Print(char *name)
             printf("%c", buffer[i]);
     delete[] buffer;
 
-    delete openFile; // close the Nachos file
+    delete openFile;// close the Nachos file
     return;
 }
 
@@ -282,7 +282,7 @@ void Print(char *name)
 #define FileName "TestFile"
 #define Contents "1234567890"
 #define ContentSize strlen(Contents)
-#define FileSize ((int)(ContentSize * 5000))
+#define FileSize ((int) (ContentSize * 5000))
 
 static void
 FileWrite()
@@ -313,7 +313,7 @@ FileWrite()
             return;
         }
     }
-    delete openFile; // close file
+    delete openFile;// close file
 }
 
 static void
@@ -344,7 +344,7 @@ FileRead()
         }
     }
     delete[] buffer;
-    delete openFile; // close file
+    delete openFile;// close file
 }
 
 void PerformanceTest()

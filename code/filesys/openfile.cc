@@ -11,11 +11,11 @@
 // All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
+#include "openfile.h"
 #include "copyright.h"
 #include "filehdr.h"
-#include "openfile.h"
-#include "system.h"
 #include "filesys.h"
+#include "system.h"
 
 // 引入filesys
 extern FileSystem *fileSystem;
@@ -119,7 +119,7 @@ int OpenFile::ReadAt(char *into, int numBytes, int position)
     char *buf;
 
     if ((numBytes <= 0) || (position >= fileLength))
-        return 0; // check request
+        return 0;// check request
     if ((position + numBytes) > fileLength)
         numBytes = fileLength - position;
     DEBUG('f', "Reading %d bytes at %d, from file of length %d.\n",
@@ -149,17 +149,17 @@ int OpenFile::WriteAt(char *from, int numBytes, int position)
     char *buf;
 
     if ((numBytes <= 0) || (position > fileLength))
-        return 0; // check request
+        return 0;// check request
 
     DEBUG('f', "Writing %d bytes at %d, from file of length %d.\n",
           numBytes, position, fileLength);
     if ((position + numBytes) > fileLength)
-    { // 扩写文件
+    {// 扩写文件
         lastSector = divRoundDown(position, SectorSize);
         numSectors = hdr->SectorsNum();
         int lastLeaveSize = SectorSize * numSectors - fileLength;
         if (numBytes <= lastLeaveSize)
-        { // 不需要新扇区
+        {// 不需要新扇区
             buf = new char[SectorSize];
             ReadAt(buf, SectorSize, lastSector * SectorSize);
             bcopy(from, &buf[SectorSize - lastLeaveSize], numBytes);
@@ -168,8 +168,7 @@ int OpenFile::WriteAt(char *from, int numBytes, int position)
             hdr->Update(fileLength + numBytes);
             hdr->WriteBack(hdrSector);
             return numBytes;
-        }
-        else
+        } else
         {
             // 需要新扇区
             BitMap *freemap = fileSystem->getBitmap();
@@ -186,8 +185,8 @@ int OpenFile::WriteAt(char *from, int numBytes, int position)
 
     buf = new char[numSectors * SectorSize];
 
-    firstAligned = (bool)(position == (firstSector * SectorSize));
-    lastAligned = (bool)((position + numBytes) == ((lastSector + 1) * SectorSize));
+    firstAligned = (bool) (position == (firstSector * SectorSize));
+    lastAligned = (bool) ((position + numBytes) == ((lastSector + 1) * SectorSize));
 
     // read in first and last sector, if they are to be partially modified
     if (!firstAligned)

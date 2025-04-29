@@ -6,9 +6,9 @@
 //      forking a bunch of these, you can simulate traffic at the bridge!
 //
 
+#include "synch.h"
 #include "copyright.h"
 #include "system.h"
-#include "synch.h"
 
 // See question 7.  The bridge can hold a maximum of 3 cars.  It is
 // one-lane, so cars may cross in one direction at a time only--otherwise
@@ -24,9 +24,9 @@ private:
 public:
     Bridge();
     ~Bridge();
-    void Arrive(int direc); // Returns when it is OK for the car to cross
-    void Cross(int direc);  // Doesn't do anything, except maybe print messages
-    void Exit(int direc);   // Leave the bridge
+    void Arrive(int direc);// Returns when it is OK for the car to cross
+    void Cross(int direc); // Doesn't do anything, except maybe print messages
+    void Exit(int direc);  // Leave the bridge
 };
 
 //----------------------------------------------------------------------
@@ -69,8 +69,8 @@ void Bridge::Arrive(int direc)
     {
         bridgeFull->Wait(lock);
     }
-    numCars++;            // reserve a spot on the bridge
-    currentDirec = direc; // make sure the direction matches
+    numCars++;           // reserve a spot on the bridge
+    currentDirec = direc;// make sure the direction matches
     lock->Release();
     DEBUG('t', "Direction [%d], ready to cross bridge now", direc);
 }
@@ -82,9 +82,9 @@ void Bridge::Arrive(int direc)
 void Bridge::Exit(int direc)
 {
     lock->Acquire();
-    numCars--; // vacate our spot on the bridge
+    numCars--;// vacate our spot on the bridge
     DEBUG('t', "Direction [%d], bridge exit", direc);
-    bridgeFull->Broadcast(lock); // signal all those waiting for the bridge
+    bridgeFull->Broadcast(lock);// signal all those waiting for the bridge
     lock->Release();
 }
 
@@ -115,8 +115,8 @@ void SynchThread(_int which)
 
     for (num = 0; num < 5; num++)
     {
-        direc = num % 2; // set direction (alternates)
-                         // The following printf's need fixing for the different types of _int of which
+        direc = num % 2;// set direction (alternates)
+                        // The following printf's need fixing for the different types of _int of which
         printf("Direction [%d], Car [%d], Arriving...\n", direc, which);
         bridge->Arrive(direc);
         currentThread->Yield();
@@ -131,7 +131,7 @@ void SynchThread(_int which)
 
 void SynchTest()
 {
-    const int maxCars = 7; // How much traffic?
+    const int maxCars = 7;// How much traffic?
     int i = 0;
     Thread *ts[maxCars];
 

@@ -35,11 +35,11 @@
 #ifndef FS_H
 #define FS_H
 
+#include "bitmap.h"
 #include "copyright.h"
 #include "openfile.h"
-#include "bitmap.h"
 
-#ifdef FILESYS_STUB // Temporarily implement file system calls as
+#ifdef FILESYS_STUB// Temporarily implement file system calls as
 // calls to UNIX, until the real file system
 // implementation is available
 class FileSystem
@@ -66,44 +66,44 @@ public:
         return new OpenFile(fileDescriptor);
     }
 
-    bool Remove(char *name) { return (bool)(Unlink(name) == 0); }
+    bool Remove(char *name) { return (bool) (Unlink(name) == 0); }
 };
 
-#else // FILESYS
+#else// FILESYS
 class FileSystem
 {
 public:
-    FileSystem(bool format); // Initialize the file system.
-                             // Must be called *after* "synchDisk"
-                             // has been initialized.
-                             // If "format", there is nothing on
-                             // the disk, so initialize the directory
-                             // and the bitmap of free blocks.
+    FileSystem(bool format);// Initialize the file system.
+                            // Must be called *after* "synchDisk"
+                            // has been initialized.
+                            // If "format", there is nothing on
+                            // the disk, so initialize the directory
+                            // and the bitmap of free blocks.
 
     bool Create(char *name, int initialSize);
     // Create a file (UNIX creat)
 
-    OpenFile *Open(char *name); // Open a file (UNIX open)
+    OpenFile *Open(char *name);// Open a file (UNIX open)
 
-    bool Remove(char *name); // Delete a file (UNIX unlink)
+    bool Remove(char *name);// Delete a file (UNIX unlink)
 
-    void List(); // List all the files in the file system
+    void List();// List all the files in the file system
 
-    void Print(); // List all the files and their contents
+    void Print();// List all the files and their contents
 
     // //为方便，直接从文件系统类里也可查找扇区
     // int find(char* name);
 
-    BitMap* getBitmap();
-    void setBitmap(BitMap * freemap);
+    BitMap *getBitmap();
+    void setBitmap(BitMap *freemap);
 
 private:
-    OpenFile *freeMapFile;   // Bit map of free disk blocks,
-                             // represented as a file
-    OpenFile *directoryFile; // "Root" directory -- list of
-                             // file names, represented as a file
+    OpenFile *freeMapFile;  // Bit map of free disk blocks,
+                            // represented as a file
+    OpenFile *directoryFile;// "Root" directory -- list of
+                            // file names, represented as a file
 };
 
-#endif // FILESYS
+#endif// FILESYS
 
-#endif // FS_H
+#endif// FS_H

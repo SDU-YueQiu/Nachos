@@ -14,8 +14,8 @@
 // All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
-#include "copyright.h"
 #include "synchdisk.h"
+#include "copyright.h"
 
 //----------------------------------------------------------------------
 // DiskRequestDone
@@ -26,9 +26,9 @@
 static void
 DiskRequestDone(_int arg)
 {
-    SynchDisk *dsk = (SynchDisk *)arg; // disk -> dsk
+    SynchDisk *dsk = (SynchDisk *) arg;// disk -> dsk
 
-    dsk->RequestDone(); // disk -> dsk
+    dsk->RequestDone();// disk -> dsk
 }
 
 //----------------------------------------------------------------------
@@ -44,7 +44,7 @@ SynchDisk::SynchDisk(char *name)
 {
     semaphore = new Semaphore("synch disk", 0);
     lock = new Lock("synch disk lock");
-    disk = new Disk(name, DiskRequestDone, (_int)this);
+    disk = new Disk(name, DiskRequestDone, (_int) this);
 }
 
 //----------------------------------------------------------------------
@@ -71,9 +71,9 @@ SynchDisk::~SynchDisk()
 
 void SynchDisk::ReadSector(int sectorNumber, char *data)
 {
-    lock->Acquire(); // only one disk I/O at a time
+    lock->Acquire();// only one disk I/O at a time
     disk->ReadRequest(sectorNumber, data);
-    semaphore->P(); // wait for interrupt
+    semaphore->P();// wait for interrupt
     lock->Release();
 }
 
@@ -91,9 +91,9 @@ void SynchDisk::WriteSector(int sectorNumber, char *data)
     // TODO:debug写入0扇区
     if (sectorNumber == 0)
         printf("ffffffffffffuck it up");
-    lock->Acquire(); // only one disk I/O at a time
+    lock->Acquire();// only one disk I/O at a time
     disk->WriteRequest(sectorNumber, data);
-    semaphore->P(); // wait for interrupt
+    semaphore->P();// wait for interrupt
     lock->Release();
 }
 
