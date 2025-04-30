@@ -12,14 +12,18 @@
 
 #include "syscall.h"
 
-int
-main()
+int main()
 {
-    char prompt[2];
-    prompt[0] = '-';
-    prompt[1] = '-';
+    // char prompt[2];
+    // prompt[0] = '-';
+    // prompt[1] = '-';
 
-    Write(prompt, 1, "I will shut down!\n");
+    // Write(prompt, 1, "I will shut down!\n");
+    int i, j, k;
+    k = 3;
+    i = 2;
+    j = i - 1;
+    k = i - j + k;
     Halt();
     /* not reached */
 }

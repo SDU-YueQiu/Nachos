@@ -178,3 +178,17 @@ void AddrSpace::RestoreState()
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
 }
+//----------------------------------------------------------------------
+// just for debug
+//----------------------------------------------------------------------
+
+void AddrSpace::Print()
+{
+    printf("page table dump: %d pages in total\n", numPages);
+    printf("=============================\n");
+    printf("\tVirtPage, \tPhysPage\n");
+    for (int i = 0; i < numPages; i++) {
+        printf("\t %d, \t\t%d\n", pageTable[i].virtualPage, pageTable[i].physicalPage);
+    }
+    printf("============================================\n\n");
+}

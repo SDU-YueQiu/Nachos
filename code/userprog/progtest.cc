@@ -31,6 +31,9 @@ void StartProcess(char *filename)
     }
     space = new AddrSpace(executable);
     currentThread->space = space;
+    
+    //just for debug
+    space->Print();
 
     delete executable;// close file
 
