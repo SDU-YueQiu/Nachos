@@ -95,6 +95,10 @@ void Scheduler::Run(Thread *nextThread)
         currentThread->SaveUserState();// save the user's CPU registers
         currentThread->space->SaveState();
     }
+    if (nextThread->space != NULL)
+    {
+        nextThread->RestoreUserState();
+    }
 #endif
 
     oldThread->CheckOverflow();// check if the old thread

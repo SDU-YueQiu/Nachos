@@ -5,5 +5,5 @@ arch/unknown-i386-linux/depends/machine.d arch/unknown-i386-linux/objects/machin
  ../threads/list.h ../threads/utility.h ../threads/scheduler.h \
  ../threads/list.h ../threads/thread.h ../userprog/addrspace.h \
  ../filesys/filesys.h ../userprog/bitmap.h ../filesys/openfile.h \
- ../filesys/openfile.h ../machine/translate.h ../machine/machine.h \
- ../machine/stats.h ../machine/timer.h
+ ../filesys/openfile.h ../machine/translate.h ../userprog/syscall.h \
+ ../machine/machine.h ../machine/stats.h ../machine/timer.h

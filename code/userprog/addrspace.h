@@ -15,7 +15,9 @@
 
 #include "copyright.h"
 #include "filesys.h"
+#include "set"
 #include "translate.h"
+#include "syscall.h"
 
 #define UserStackSize 1024// increase this as necessary!
 
@@ -34,11 +36,18 @@ public:
     void RestoreState();// info on a context switch
 
     void Print();
+
+    SpaceId getSpaceID();
+
+    static int globalPid;
+    static std::set<SpaceId> pids;
+    static BitMap memfreemap;
 private:
     TranslationEntry *pageTable;// Assume linear page table translation
                                 // for now!
     unsigned int numPages;      // Number of pages in the virtual
                                 // address space
+    SpaceId pid;
 };
 
 #endif// ADDRSPACE_H

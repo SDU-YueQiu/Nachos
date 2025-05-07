@@ -34,6 +34,7 @@
 
 Thread::Thread(char *threadName)
 {
+    exitCode = -1024;//代表无返回码
     name = threadName;
     stackTop = NULL;
     stack = NULL;

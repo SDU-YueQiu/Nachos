@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/code/userprog/nachos",
-            "args": ["-x","../test/halt.noff"],
+            "args": ["-x","../test/exec.noff"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/code/userprog/",
             "environment": [],

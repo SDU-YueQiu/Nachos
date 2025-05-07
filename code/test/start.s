@@ -60,6 +60,14 @@ Exit:
 
 	.globl Exec
 	.ent	Exec
+Print:
+	addiu $2,$0,SC_Print
+	syscall
+	j	$31
+	.end Print
+
+	.globl Print
+	.ent	Print
 Exec:
 	addiu $2,$0,SC_Exec
 	syscall

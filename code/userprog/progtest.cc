@@ -31,14 +31,28 @@ void StartProcess(char *filename)
     }
     space = new AddrSpace(executable);
     currentThread->space = space;
-    
-    //just for debug
-    space->Print();
+
+    // //just for debug
+    // space->Print();
 
     delete executable;// close file
 
     space->InitRegisters();// set the initial register values
     space->RestoreState(); // load page table register
+
+    machine->Run();// jump to the user progam
+    ASSERT(FALSE); // machine->Run never returns;
+                   // the address space exits
+                   // by doing the syscall "exit"
+}
+
+void StartProcess(int baredfunc)
+{
+    // //just for debug
+    // currentThread->space->Print();
+
+    currentThread->space->InitRegisters();// set the initial register values
+    currentThread->space->RestoreState(); // load page table register
 
     machine->Run();// jump to the user progam
     ASSERT(FALSE); // machine->Run never returns;

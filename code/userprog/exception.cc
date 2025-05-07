@@ -22,8 +22,18 @@
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
+#include "filesys.h"
 #include "syscall.h"
 #include "system.h"
+
+//extern FileSystem fileSystem;
+void StartProcess(int baredfunc);
+
+void AdvancePC()
+{
+    machine->WriteRegister(PCReg, machine->ReadRegister(PCReg) + 4);
+    machine->WriteRegister(NextPCReg, machine->ReadRegister(NextPCReg) + 4);
+}
 
 //----------------------------------------------------------------------
 // ExceptionHandler
@@ -55,7 +65,59 @@ void ExceptionHandler(ExceptionType which)
     if ((which == SyscallException) && (type == SC_Halt)) {
         DEBUG('a', "Shutdown, initiated by user program.\n");
         interrupt->Halt();
-    } else {
+    } else if ((which == SyscallException) && (type == SC_Exit)) {
+        DEBUG('a', "Userprog Exit");
+        int ExitStatus = machine->ReadRegister(4);
+        machine->WriteRegister(2, ExitStatus);
+        //TODO:为写报告输出
+        printf("用户程序%dExit with code %d\n", currentThread->space->getSpaceID(), ExitStatus);
+        delete currentThread->space;
+        currentThread->Finish();
+        AdvancePC();
+    } else if ((which == SyscallException) && (type == SC_Exec)) {
+        DEBUG('a', "Userprog Execute other userprog");
+        char filename[128];
+        int addr = machine->ReadRegister(4);
+        int i = 0;
+        do {
+            //read filename from mainMemory
+            machine->ReadMem(addr + i, 1, (int *) &filename[i]);
+        } while (filename[i++] != '\0');
+
+        OpenFile *executable = fileSystem->Open(filename);
+        ASSERT(executable != NULL);
+
+        AddrSpace *space = new AddrSpace(executable);
+        delete executable;
+
+        Thread *newthread = new Thread(filename);
+        newthread->setSpace(space);
+        newthread->Fork(StartProcess, 0);
+
+        currentThread->Yield();
+
+        machine->WriteRegister(2, space->getSpaceID());
+        AdvancePC();//PC 增量指向下条指令
+    } else if ((which == SyscallException) && (type == SC_Yield))
+    {
+        DEBUG('a', "Userprog Yield");
+        currentThread->Yield();
+        AdvancePC();
+    } else if ((which == SyscallException) && (type == SC_Print))
+    {
+        DEBUG('a', "Userprog Print message");
+        char str[128];
+        memset(str, 0, sizeof(str));
+        int addr = machine->ReadRegister(4);
+        int i = 0;
+        do {
+            machine->ReadMem(addr + i, 1, (int *) &str[i]);
+        } while (str[i++] != '\0');
+        //currentThread->space->Print();
+        printf("用户程序%d输出:%s\n", currentThread->space->getSpaceID(), str);
+        AdvancePC();
+    } else
+    {
         printf("Unexpected user mode exception %d %d\n", which, type);
         ASSERT(FALSE);
     }

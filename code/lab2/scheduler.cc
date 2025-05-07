@@ -20,6 +20,7 @@
 
 #include "scheduler.h"
 #include "copyright.h"
+#include "machine.h"
 #include "system.h"
 
 //----------------------------------------------------------------------
@@ -94,6 +95,10 @@ void Scheduler::Run(Thread *nextThread)
     if (currentThread->space != NULL) {// if this thread is a user program,
         currentThread->SaveUserState();// save the user's CPU registers
         currentThread->space->SaveState();
+    }
+    if (nextThread->space != NULL)
+    {
+        nextThread->RestoreUserState();
     }
 #endif
 

@@ -5,5 +5,5 @@ arch/unknown-i386-linux/depends/interrupt.d arch/unknown-i386-linux/objects/inte
  ../threads/list.h ../threads/thread.h ../userprog/addrspace.h \
  ../filesys/filesys.h ../userprog/bitmap.h ../filesys/openfile.h \
  ../threads/utility.h ../filesys/openfile.h ../machine/translate.h \
- ../machine/machine.h ../machine/disk.h ../machine/translate.h \
- ../machine/stats.h ../machine/timer.h
+ ../userprog/syscall.h ../machine/machine.h ../machine/disk.h \
+ ../machine/translate.h ../machine/stats.h ../machine/timer.h

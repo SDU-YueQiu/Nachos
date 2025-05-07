@@ -2,8 +2,8 @@ arch/unknown-i386-linux/depends/thread.d arch/unknown-i386-linux/objects/thread.
  ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
  ../threads/copyright.h ../userprog/addrspace.h ../filesys/filesys.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../threads/utility.h \
- ../filesys/openfile.h ../machine/translate.h ../machine/machine.h \
- ../machine/disk.h ../machine/translate.h ../threads/switch.h \
- ../threads/synch.h ../threads/list.h ../threads/system.h \
- ../machine/interrupt.h ../threads/list.h ../threads/scheduler.h \
- ../machine/stats.h ../machine/timer.h
+ ../filesys/openfile.h ../machine/translate.h ../userprog/syscall.h \
+ ../machine/machine.h ../machine/disk.h ../machine/translate.h \
+ ../threads/switch.h ../threads/synch.h ../threads/list.h \
+ ../threads/system.h ../machine/interrupt.h ../threads/list.h \
+ ../threads/scheduler.h ../machine/stats.h ../machine/timer.h

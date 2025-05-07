@@ -14,16 +14,10 @@
 
 int main()
 {
-    // char prompt[2];
-    // prompt[0] = '-';
-    // prompt[1] = '-';
-
-    // Write(prompt, 1, "I will shut down!\n");
-    int i, j, k;
-    k = 3;
-    i = 2;
-    j = i - 1;
-    k = i - j + k;
+    Print("halt.c running 0");
+    Yield();
+    Print("halt.c running 1");
+    Yield();
+    Print("halt.c running 2");
     Halt();
-    /* not reached */
 }
