@@ -88,9 +88,6 @@ void SynchDisk::ReadSector(int sectorNumber, char *data)
 
 void SynchDisk::WriteSector(int sectorNumber, char *data)
 {
-    // TODO:debug写入0扇区
-    if (sectorNumber == 0)
-        printf("ffffffffffffuck it up");
     lock->Acquire();// only one disk I/O at a time
     disk->WriteRequest(sectorNumber, data);
     semaphore->P();// wait for interrupt

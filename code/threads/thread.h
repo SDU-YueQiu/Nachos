@@ -109,7 +109,12 @@ public:
     void setStatus(ThreadStatus st) { status = st; }
     char *getName() { return (name); }
     void Print() { printf("%s, ", name); }
-    void setSpace(AddrSpace *space1) { space = space1; };
+#ifdef USER_PROGRAM
+    void setSpace(AddrSpace *space1)
+    {
+        space = space1;
+    };
+#endif
 
 private:
     // some of the private data for this class is listed above
